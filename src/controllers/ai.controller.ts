@@ -3,7 +3,7 @@ import prisma from '../models/prisma';
 import { AuthRequest } from '../middleware/authenticate';
 import { requireMember } from './projects.controller';
 import { badRequestError } from '../utils/errors';
-import { parseTranscript } from '../services/ai.service';
+import { parseTranscript, chatWithAI } from '../services/ai.service';
 
 // POST /api/ai/parse-task
 export async function parseTask(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
@@ -48,6 +48,26 @@ export async function parseTask(req: AuthRequest, res: Response, next: NextFunct
       assignees: resolvedAssignees,
       rawAssigneeNames: parsed.assigneeNames,
     });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// POST /api/ai/chat
+export async function chat(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const { message, conversationHistory } = req.body as {
+      message?: string;
+      conversationHistory?: { role: string; content: string }[];
+    };
+
+    if (!message || !message.trim()) {
+      throw badRequestError('Message is required');
+    }
+
+    const reply = await chatWithAI(message, conversationHistory ?? []);
+
+    res.json({ reply });
   } catch (err) {
     next(err);
   }

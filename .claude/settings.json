@@ -11,7 +11,12 @@
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_dmY4HJzipCK8@ep-icy-river-ak4b0zyh.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require\" npx prisma db push)",
       "Bash(vercel --prod --yes)",
       "Bash(vercel logs:*)",
-      "Bash(vercel inspect:*)"
+      "Bash(vercel inspect:*)",
+      "Bash(vercel env:*)",
+      "Bash(curl -sv https://task-management-api-brown.vercel.app/api/health)",
+      "Bash(curl -s https://task-management-api-brown.vercel.app/api/debug)",
+      "Bash(curl -s https://task-management-api-brown.vercel.app/api/auth/register -H \"Content-Type: application/json\" -d '{\"\"\"\"name\"\"\"\":\"\"\"\"Test User\"\"\"\",\"\"\"\"email\"\"\"\":\"\"\"\"test@example.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"Password1\"\"\"\"}')",
+      "Bash(curl -s -w \"\\\\nHTTP_CODE: %{http_code}\" https://task-management-api-brown.vercel.app/api/nonexistent)"
     ]
   }
 }
