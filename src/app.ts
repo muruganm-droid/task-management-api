@@ -21,9 +21,13 @@ const app = express();
 
 // Security & parsing
 app.use(helmet());
-app.use(cors({ origin: process.env.CORS_ORIGIN ?? '*', credentials: true }));
+const corsOrigin = process.env.CORS_ORIGIN?.trim() || '*';
+app.use(cors({ origin: corsOrigin, credentials: corsOrigin !== '*' }));
 app.use(express.json());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
+// Health check
+app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -39,9 +43,6 @@ app.use('/api/ai', aiRoutes);
 
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
-// Health check
-app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
 // Error handling
 app.use(notFound);
