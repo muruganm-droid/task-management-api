@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(vercel login:*)",
+      "Bash(vercel --yes --name task-management-api)",
+      "Bash(npx tsc:*)",
+      "Bash(curl -s https://task-management-api-brown.vercel.app/api/health)",
+      "Bash(curl -s -w \"\\\\nHTTP_CODE: %{http_code}\" https://task-management-api-brown.vercel.app/api/health)",
+      "Bash(brew list:*)",
+      "Bash(npx neonctl:*)",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_dmY4HJzipCK8@ep-icy-river-ak4b0zyh.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require\" npx prisma db push)",
+      "Bash(vercel --prod --yes)"
+    ]
+  }
+}

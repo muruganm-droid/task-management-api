@@ -1,0 +1,713 @@
+{
+  "info": {
+    "name": "Task Management API",
+    "description": "Complete API collection for the Task Management App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "projectId",
+      "value": ""
+    },
+    {
+      "key": "taskId",
+      "value": ""
+    },
+    {
+      "key": "commentId",
+      "value": ""
+    },
+    {
+      "key": "labelId",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "notificationId",
+      "value": ""
+    },
+    {
+      "key": "subtaskId",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health",
+            "auth": { "type": "noauth" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.tokens) {",
+                  "  pm.collectionVariables.set('accessToken', res.tokens.accessToken);",
+                  "  pm.collectionVariables.set('refreshToken', res.tokens.refreshToken);",
+                  "}",
+                  "if (res.user) {",
+                  "  pm.collectionVariables.set('userId', res.user.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.tokens) {",
+                  "  pm.collectionVariables.set('accessToken', res.tokens.accessToken);",
+                  "  pm.collectionVariables.set('refreshToken', res.tokens.refreshToken);",
+                  "}",
+                  "if (res.user) {",
+                  "  pm.collectionVariables.set('userId', res.user.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Password1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.accessToken) {",
+                  "  pm.collectionVariables.set('accessToken', res.accessToken);",
+                  "  pm.collectionVariables.set('refreshToken', res.refreshToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/refresh",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/logout",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/forgot-password",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/reset-password",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"reset-token-here\",\n  \"newPassword\": \"NewPassword1\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users/me"
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/users/me",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"bio\": \"Full-stack developer\",\n  \"avatarUrl\": \"https://example.com/avatar.png\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/users/me/password",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Password1\",\n  \"newPassword\": \"NewPassword1\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "List Projects",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/projects"
+          }
+        },
+        {
+          "name": "Create Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id) {",
+                  "  pm.collectionVariables.set('projectId', res.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/projects",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My First Project\",\n  \"description\": \"A sample project for testing\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Project",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/projects/{{projectId}}",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Project Name\",\n  \"description\": \"Updated description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "Members",
+          "item": [
+            {
+              "name": "List Members",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/projects/{{projectId}}/members"
+              }
+            },
+            {
+              "name": "Add Member",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/projects/{{projectId}}/members",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"member@example.com\",\n  \"role\": \"MEMBER\"\n}"
+                }
+              }
+            },
+            {
+              "name": "Update Member Role",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/projects/{{projectId}}/members/{{userId}}",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"role\": \"ADMIN\"\n}"
+                }
+              }
+            },
+            {
+              "name": "Remove Member",
+              "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/projects/{{projectId}}/members/{{userId}}"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Labels",
+          "item": [
+            {
+              "name": "List Labels",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/projects/{{projectId}}/labels"
+              }
+            },
+            {
+              "name": "Create Label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();",
+                      "if (res.id) {",
+                      "  pm.collectionVariables.set('labelId', res.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/projects/{{projectId}}/labels",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Bug\",\n  \"color\": \"#ff0000\"\n}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tasks (by Project)",
+          "item": [
+            {
+              "name": "List Tasks",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/projects/{{projectId}}/tasks?status=TODO,IN_PROGRESS&priority=HIGH,MEDIUM&sortBy=createdAt&sortOrder=desc",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["projects", "{{projectId}}", "tasks"],
+                  "query": [
+                    { "key": "status", "value": "TODO,IN_PROGRESS", "disabled": true },
+                    { "key": "priority", "value": "HIGH,MEDIUM", "disabled": true },
+                    { "key": "assigneeId", "value": "{{userId}}", "disabled": true },
+                    { "key": "labelId", "value": "{{labelId}}", "disabled": true },
+                    { "key": "search", "value": "keyword", "disabled": true },
+                    { "key": "sortBy", "value": "createdAt", "disabled": true },
+                    { "key": "sortOrder", "value": "desc", "disabled": true }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Task",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();",
+                      "if (res.id) {",
+                      "  pm.collectionVariables.set('taskId', res.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/projects/{{projectId}}/tasks",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Implement login page\",\n  \"description\": \"Create the login page with email and password fields\",\n  \"priority\": \"HIGH\",\n  \"dueDate\": \"2026-04-01T00:00:00.000Z\",\n  \"assigneeIds\": []\n}"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "Get Task",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        },
+        {
+          "name": "Update Task",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/tasks/{{taskId}}",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated task title\",\n  \"status\": \"IN_PROGRESS\",\n  \"priority\": \"HIGH\",\n  \"description\": \"Updated description\",\n  \"dueDate\": \"2026-04-15T00:00:00.000Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        },
+        {
+          "name": "Subtasks",
+          "item": [
+            {
+              "name": "List Subtasks",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/tasks/{{taskId}}/subtasks"
+              }
+            },
+            {
+              "name": "Create Subtask",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();",
+                      "if (res.id) {",
+                      "  pm.collectionVariables.set('subtaskId', res.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/tasks/{{taskId}}/subtasks",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Design mockup\"\n}"
+                }
+              }
+            },
+            {
+              "name": "Update Subtask",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/tasks/{{taskId}}/subtasks/{{subtaskId}}",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Design mockup - updated\",\n  \"isDone\": true\n}"
+                }
+              }
+            },
+            {
+              "name": "Delete Subtask",
+              "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/tasks/{{taskId}}/subtasks/{{subtaskId}}"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Comments",
+          "item": [
+            {
+              "name": "List Comments",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/tasks/{{taskId}}/comments"
+              }
+            },
+            {
+              "name": "Add Comment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();",
+                      "if (res.id) {",
+                      "  pm.collectionVariables.set('commentId', res.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/tasks/{{taskId}}/comments",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"body\": \"This looks good, let's proceed.\"\n}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Labels",
+          "item": [
+            {
+              "name": "Attach Labels",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/tasks/{{taskId}}/labels",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"labelIds\": [\"{{labelId}}\"]\n}"
+                }
+              }
+            },
+            {
+              "name": "Remove Label",
+              "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/tasks/{{taskId}}/labels/{{labelId}}"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Activity Log",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/{{taskId}}/activity"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Update Comment",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/comments/{{commentId}}",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Updated comment text.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/comments/{{commentId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "List Notifications",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/notifications"
+          }
+        },
+        {
+          "name": "Mark as Read",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/notifications/{{notificationId}}/read"
+          }
+        },
+        {
+          "name": "Mark All as Read",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/notifications/read-all"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "My Tasks",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboard/my-tasks"
+          }
+        },
+        {
+          "name": "Project Dashboard",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboard/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "Trends (30 days)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboard/trends"
+          }
+        }
+      ]
+    }
+  ]
+}
