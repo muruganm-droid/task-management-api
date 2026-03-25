@@ -9,7 +9,9 @@
       "Bash(brew list:*)",
       "Bash(npx neonctl:*)",
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_dmY4HJzipCK8@ep-icy-river-ak4b0zyh.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require\" npx prisma db push)",
-      "Bash(vercel --prod --yes)"
+      "Bash(vercel --prod --yes)",
+      "Bash(vercel logs:*)",
+      "Bash(vercel inspect:*)"
     ]
   }
 }
